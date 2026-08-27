@@ -4,47 +4,39 @@ Human-AI policy deliberation prototype. **It does not recommend implementing a p
 
 First slice: minimum wage · United States, United Kingdom, Canada, Australia.
 
-## What is already working
+The demo app is a **single Next.js project** in `apps/web`. Analysis, chat debate, and Monte Carlo all run as Next.js API routes. No Python server is required to host or demo.
 
-1. Public datasets downloaded into `data/`
-   - World Bank World Development Indicators (no API key)
-   - ILOSTAT monthly minimum wage, PPP and local currency
-   - FRED US federal hourly minimum wage
-2. Policy events detected as year-on-year ILO increases of 8% or more, joined to World Bank outcomes
-3. FastAPI: structure → 3-agent debate → Monte Carlo
-4. Next.js workspace: Analyze, Debate, Simulation
+## Deploy on Vercel (for the demo)
 
-## Run (two terminals)
+1. Push this repo to GitHub (already: `https://github.com/Delta17920/researchh`).
+2. Go to [vercel.com/new](https://vercel.com/new) and sign in with GitHub.
+3. **Import** `Delta17920/researchh`.
+4. Set **Root Directory** to `apps/web` (click *Edit* next to Root Directory).  
+   Framework should show **Next.js**. Leave build as default (`npm run build`).
+5. Click **Deploy**. Wait ~1–2 minutes.
+6. Open the `*.vercel.app` URL. Use **Analyze → Run analysis**.
+
+No environment variables are needed.
+
+If Root Directory is left as `.` the build will fail, because Next.js lives in `apps/web`.
+
+## Run locally (one terminal)
 
 ```powershell
-cd C:\Users\sbang\OneDrive\Desktop\researchh
-python -m pip install -r apps/api/requirements.txt
-python -m uvicorn app.main:app --app-dir apps/api --reload --port 8000
-```
-
-```powershell
-cd C:\Users\sbang\OneDrive\Desktop\researchh\apps\web
+cd apps/web
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and click **Analyze a policy**.
+Open [http://localhost:3000](http://localhost:3000).
 
-Refresh data later:
+Optional Python API (`apps/api`) still exists for research work. The Vercel demo does not use it.
+
+## Data
+
+Public datasets are bundled in `apps/web/data/catalog.json` (World Bank, ILOSTAT, FRED). Refresh from scratch with:
 
 ```powershell
 python scripts/fetch_data.py
+copy data\processed\catalog.json apps\web\data\catalog.json
 ```
-
-## API
-
-- `GET /health`
-- `GET /catalog`
-- `GET /events`
-- `POST /structure` `{ "text": "..." }`
-- `POST /analyze` `{ "text": "...", "coverage_pct": 100, "compliance_pct": 85, "macro": "normal" }`
-- `POST /simulate` `{ "country": "GBR", "magnitude_pct": 15, ... }`
-
-## Not in this slice
-
-Custom LLM training, all 13 agents, carbon pricing, or an “implement this” button.

@@ -22,7 +22,7 @@ export default function SimulationPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/backend/simulate", {
+      const res = await fetch("/api/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -80,7 +80,7 @@ export default function AnalyzePage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/backend/analyze", {
+      const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -95,7 +95,7 @@ export default function AnalyzePage() {
       setResult(data);
       sessionStorage.setItem("policylens:last", JSON.stringify(data));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Analysis failed. Is the API running on :8000?");
+      setError(err instanceof Error ? err.message : "Analysis failed.");
     } finally {
       setLoading(false);
     }
