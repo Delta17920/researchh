@@ -1,4 +1,4 @@
-# PolicyLens AI 
+# PolicyLens AI
 
 Human-AI policy deliberation prototype. **It does not recommend implementing a policy.**
 
