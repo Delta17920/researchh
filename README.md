@@ -2,7 +2,7 @@
 
 Human AI policy deliberation prototype. **It does not recommend implementing a policy.**
 
-First slice: minimum wage · United States, United Kingdom, Canada, Australia.
+First slice: minimum wage · United States, United Kingdom(Great Britain), Canada, Australia.
 
 The demo app is a **single Next.js project** in `apps/web`. Analysis, chat debate, and Monte Carlo all run as Next.js API routes. No Python server is required to host or demo.
 
