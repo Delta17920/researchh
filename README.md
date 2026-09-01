@@ -1,6 +1,6 @@
 # PolicyLens AI
 
-Human-AI policy deliberation prototype. **It does not recommend implementing a policy.**
+Human AI policy deliberation prototype. **It does not recommend implementing a policy.**
 
 First slice: minimum wage · United States, United Kingdom, Canada, Australia.
 
