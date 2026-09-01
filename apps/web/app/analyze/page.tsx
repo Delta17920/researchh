@@ -104,7 +104,7 @@ export default function AnalyzePage() {
   const metrics = useMemo(() => result?.simulation.metrics ?? null, [result]);
 
   return (
-    <main>
+    <main style={{ paddingTop: 32 }}>
       <div className="kicker" style={{ paddingTop: 28 }}>
         Policy workspace
       </div>
