@@ -85,8 +85,8 @@ export default function SimulationPage() {
 
   return (
     <main className="sim-page">
-      <div className="kicker">03 — Counterfactual layer</div>
-      <h1>Scenario simulator</h1>
+      <div className="kicker">03 / Simulation</div>
+      <h1>Explore outcomes, not predictions.</h1>
       <p className="lede">
         Change magnitude, coverage, compliance, and the macro regime. This re-runs the numeric
         engine only — not a new essay. Baseline index = 100.

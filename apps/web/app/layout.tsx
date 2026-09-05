@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Instrument_Serif, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
 const sans = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const serif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-serif",
-});
 
 export const metadata: Metadata = {
   title: "PolicyLens AI",
@@ -18,22 +13,44 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${sans.variable} ${serif.variable}`}>
-        <div className="shell">
-          <nav className="nav">
+      <body className={sans.variable}>
+        <div className="frame">
+          <header className="nav">
             <Link href="/" className="brand">
-              Policy<span>Lens</span>
+              PolicyLens
+              <span className="brand-tag">Decision support through structured disagreement.</span>
             </Link>
-            <div className="nav-links">
+            <nav className="nav-links" aria-label="Primary">
+              <Link href="/analyze">Analyze</Link>
+              <span className="dot" aria-hidden>
+                ·
+              </span>
+              <Link href="/debate">Debate</Link>
+              <span className="dot" aria-hidden>
+                ·
+              </span>
+              <Link href="/simulation">Simulate</Link>
+              <span className="dot" aria-hidden>
+                ·
+              </span>
+              <Link href="/#about">About</Link>
+            </nav>
+            <Link className="nav-cta" href="/analyze">
+              Get started →
+            </Link>
+          </header>
+          <div className="shell">{children}</div>
+          <footer className="site-foot">
+            <div>
+              <strong>PolicyLens</strong>
+              <p>Human–AI deliberation. No automatic implement decision.</p>
+            </div>
+            <div className="foot-links">
               <Link href="/analyze">Analyze</Link>
               <Link href="/debate">Debate</Link>
-              <Link href="/simulation">Simulation</Link>
+              <Link href="/simulation">Simulate</Link>
             </div>
-            <Link className="nav-cta" href="/analyze">
-              Start
-            </Link>
-          </nav>
-          {children}
+          </footer>
         </div>
       </body>
     </html>

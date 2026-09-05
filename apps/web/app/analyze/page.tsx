@@ -106,7 +106,7 @@ export default function AnalyzePage() {
   return (
     <main style={{ paddingTop: 32 }}>
       <div className="kicker" style={{ paddingTop: 28 }}>
-        Policy workspace
+        02 / Analyze
       </div>
       <h1>Analyze a minimum-wage proposal</h1>
       <p className="lede">

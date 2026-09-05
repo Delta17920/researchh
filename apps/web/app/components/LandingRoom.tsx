@@ -10,7 +10,7 @@ type Line = {
   to?: string;
 };
 
-const SCRIPT: Line[] = [
+export const SCRIPT: Line[] = [
   {
     agent: "moderator",
     name: "Moderator",
@@ -66,16 +66,12 @@ export default function LandingRoom() {
   const [stall, setStall] = useState(0);
 
   useEffect(() => {
-    const t = window.setInterval(() => {
-      setStep((n) => (n + 1) % SCRIPT.length);
-    }, 2800);
+    const t = window.setInterval(() => setStep((n) => (n + 1) % SCRIPT.length), 2800);
     return () => window.clearInterval(t);
   }, []);
 
   useEffect(() => {
-    const t = window.setInterval(() => {
-      setStall((n) => (n + 1) % (STALLED.length + 2));
-    }, 1600);
+    const t = window.setInterval(() => setStall((n) => (n + 1) % (STALLED.length + 2)), 1600);
     return () => window.clearInterval(t);
   }, []);
 
@@ -84,7 +80,7 @@ export default function LandingRoom() {
   const speaking = live.agent;
 
   return (
-    <section className="compare" aria-label="How deliberation differs from a single agent">
+    <div className="compare" aria-label="How deliberation differs from a single agent">
       <div className="term">
         <div className="term-head">
           <span>A single LLM</span>
@@ -118,31 +114,7 @@ export default function LandingRoom() {
             <i /> Deliberating
           </span>
         </div>
-
-        <div className="room-stage">
-          <svg className="room-edges" viewBox="0 0 320 200" aria-hidden>
-            <line className={edgeOn(speaking, "economic", "social")} x1="60" y1="150" x2="160" y2="40" />
-            <line className={edgeOn(speaking, "social", "red_team")} x1="160" y1="40" x2="260" y2="150" />
-            <line className={edgeOn(speaking, "red_team", "economic")} x1="260" y1="150" x2="60" y2="150" />
-          </svg>
-          <div className={`node n-social ${speaking === "social" ? "hot" : ""}`}>
-            <span className="avatar social">So</span>
-            Social
-          </div>
-          <div className={`node n-econ ${speaking === "economic" ? "hot" : ""}`}>
-            <span className="avatar economic">Ec</span>
-            Economic
-          </div>
-          <div className={`node n-red ${speaking === "red_team" ? "hot" : ""}`}>
-            <span className="avatar red_team">Rt</span>
-            Red Team
-          </div>
-          <div className={`node n-mod ${speaking === "moderator" ? "hot" : ""}`}>
-            <span className="avatar moderator">Md</span>
-            Moderator
-          </div>
-        </div>
-
+        <AgentMap speaking={speaking} compact />
         <div className="speech" key={step}>
           <header>
             <b>{live.name}</b>
@@ -150,7 +122,6 @@ export default function LandingRoom() {
           </header>
           <p>{live.text}</p>
         </div>
-
         <div className="term-log">
           {shown.slice(-3).map((m, i) => (
             <div key={`${m.agent}-${i}-${step}`} className="term-line">
@@ -160,10 +131,40 @@ export default function LandingRoom() {
         </div>
         <div className="term-foot">
           <span>3 agents · 1 moderator · 0 implement votes</span>
-          <span>{step + 1}/{SCRIPT.length}</span>
+          <span>
+            {step + 1}/{SCRIPT.length}
+          </span>
         </div>
       </div>
-    </section>
+    </div>
+  );
+}
+
+export function AgentMap({ speaking, compact }: { speaking: string; compact?: boolean }) {
+  return (
+    <div className={`room-stage ${compact ? "compact" : ""}`}>
+      <svg className="room-edges" viewBox="0 0 320 200" aria-hidden>
+        <line className={edgeOn(speaking, "economic", "social")} x1="60" y1="150" x2="160" y2="40" />
+        <line className={edgeOn(speaking, "social", "red_team")} x1="160" y1="40" x2="260" y2="150" />
+        <line className={edgeOn(speaking, "red_team", "economic")} x1="260" y1="150" x2="60" y2="150" />
+      </svg>
+      <div className={`node n-social ${speaking === "social" ? "hot" : ""}`}>
+        <span className="avatar social">So</span>
+        Social
+      </div>
+      <div className={`node n-econ ${speaking === "economic" ? "hot" : ""}`}>
+        <span className="avatar economic">Ec</span>
+        Economic
+      </div>
+      <div className={`node n-red ${speaking === "red_team" ? "hot" : ""}`}>
+        <span className="avatar red_team">Rt</span>
+        Red Team
+      </div>
+      <div className={`node n-mod ${speaking === "moderator" ? "hot" : ""}`}>
+        <span className="avatar moderator">Md</span>
+        Moderator
+      </div>
+    </div>
   );
 }
 
