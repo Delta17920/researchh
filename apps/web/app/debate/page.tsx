@@ -55,7 +55,7 @@ export default function DebatePage() {
 
   return (
     <main style={{ paddingTop: 32 }}>
-      <div className="kicker">Working group · live transcript</div>
+      <div className="kicker">01 / Live debate</div>
       <h1>
         {data.policy.country_name} +{data.policy.magnitude_pct}%
       </h1>
