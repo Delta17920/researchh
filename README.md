@@ -16,7 +16,20 @@ The demo app is a **single Next.js project** in `apps/web`. Analysis, chat debat
 5. Click **Deploy**. Wait ~1–2 minutes.
 6. Open the `*.vercel.app` URL. Use **Analyze → Run analysis**.
 
-No environment variables are needed.
+No environment variables are needed for the **scripted** demo.
+
+For **live agents** on Vercel: Project Settings → Environment Variables → add:
+
+- `GROQ_API_KEY` (from [console.groq.com/keys](https://console.groq.com/keys))
+- optional `GROQ_MODEL` (default `llama-3.3-70b-versatile`)
+
+Apply to Production, then Redeploy. Without the key, Analyze still uses the scripted room.
+
+## Live agents (local)
+
+Copy `apps/web/.env.example` to `apps/web/.env.local` and set `GROQ_API_KEY`.
+
+Then `npm run dev`. Analyze will say **Live agents** under The room. Numbers still come from our Monte Carlo; Groq only writes the debate. If Groq fails, it falls back to the scripted room.
 
 If Root Directory is left as `.` the build will fail, because Next.js lives in `apps/web`.
 

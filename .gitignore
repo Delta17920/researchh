@@ -5,6 +5,9 @@ __pycache__/
 .venv/
 venv/
 .env
+.env.local
+apps/web/.env.local
+*.tsbuildinfo
 .DS_Store
 data/raw/ilo_dataflows.xml
 apps/web/next-env.d.ts

@@ -59,6 +59,9 @@ type Result = {
     disagreements: string[];
     alternative_policies: string[];
   };
+  agent_mode?: "scripted" | "live";
+  agent_model?: string;
+  agent_fallback_reason?: string;
 };
 
 const EXAMPLES = [
@@ -108,10 +111,10 @@ export default function AnalyzePage() {
       <div className="kicker" style={{ paddingTop: 28 }}>
         02 / Analyze
       </div>
-      <h1>Analyze a minimum-wage proposal</h1>
+      <h1>Analyze a financial-policy proposal</h1>
       <p className="lede">
-        Natural language in. Structured policy, comparable historical hikes, three-agent debate,
-        and a Monte Carlo — using the local catalog built from public APIs.
+        Natural language in. Live agents (if an API key is set) argue from World Bank / ILO history
+        and our Monte Carlo — they do not invent the numbers, and they do not vote to implement.
       </p>
 
       <section className="composer">
@@ -168,7 +171,13 @@ export default function AnalyzePage() {
           </p>
 
           <h2 style={{ marginTop: 28 }}>The room</h2>
-          <p className="muted">Agents post in turn. They are not a committee vote.</p>
+          <p className="muted">
+            {result.agent_mode === "live"
+              ? `Live agents · ${result.agent_model ?? "API model"} · numbers still come from our simulator.`
+              : result.agent_fallback_reason
+                ? `Scripted fallback (${result.agent_fallback_reason}). Add GROQ_API_KEY in Vercel env or apps/web/.env.local.`
+                : "Scripted room · add GROQ_API_KEY on Vercel (or apps/web/.env.local) for live Groq agents."}
+          </p>
           <AgentChat
             topic={`${result.policy.country_name.toLowerCase().replaceAll(" ", "-")}-${result.policy.implementation_year}`}
             messages={result.transcript}
