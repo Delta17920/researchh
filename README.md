@@ -21,7 +21,7 @@ No environment variables are needed for the **scripted** demo.
 For **live agents** on Vercel: Project Settings → Environment Variables → add:
 
 - `GROQ_API_KEY` (from [console.groq.com/keys](https://console.groq.com/keys))
-- optional `GROQ_MODEL` (default `llama-3.3-70b-versatile`)
+- optional `GROQ_MODEL` (default `openai/gpt-oss-20b`; Llama 3.3 70B is not on most Groq free keys)
 
 Apply to Production, then Redeploy. Without the key, Analyze still uses the scripted room.
 
