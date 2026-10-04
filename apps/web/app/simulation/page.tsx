@@ -57,7 +57,7 @@ export default function SimulationPage() {
     setError(null);
     setSim(null);
     try {
-      const res = await fetch("/api/simulate", {
+      const res = await fetch("http://localhost:8000/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

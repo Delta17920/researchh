@@ -1,5 +1,6 @@
 # Product Requirements Document
 
+> **Build Status**: The core features of this PRD have been successfully prototyped in `apps/web` (Next.js) and `apps/api` (FastAPI). The system currently features dynamic domain extraction, adversarial agent deliberation (via Llama 3/Groq), live internet evidence gathering (via Tavily), and dynamic macroeconomic simulation.
 ## 1. Product Title
 
 **PolicyLens AI**
@@ -728,13 +729,14 @@ These go into a vector database.
 
 ## No custom LLM.
 
-Use an existing foundation model for:
+Use an existing foundation model (e.g., Llama 3 70B via Groq API for high-speed reasoning) for:
 
 - reasoning
 - extraction
 - agent communication
 - summarization
 - debate
+- live web search integration (Tavily API)
 
 ---
 
@@ -1556,23 +1558,13 @@ World Bank
        ↓
 National Statistics
        ↓
-Research Papers
-       ↓
-Policy Documents
-       ↓
 Data Cleaning
        ↓
-Country Normalization
-       ↓
-Policy Normalization
-       ↓
-Feature Store
-       ↓
-PostgreSQL
-       +
-Vector Database
+Feature Store (JSON/Local)
        ↓
 AI Agents
+       +
+Live Web Search API (Tavily)
        ↓
 Simulation Models
        ↓
@@ -1581,39 +1573,18 @@ Dashboard
 
 ---
 
-# 31. Database
+# 31. Database & Evidence Architecture
 
 Recommended:
 
-### PostgreSQL
+### JSON Document Store
 
-Tables:
+For MVP agility, historical country indicators and verified events are packaged directly into a bundled `catalog.json` feature store, removing the need for a complex relational database setup (like PostgreSQL) during initial academic testing.
 
-```text
-countries
-policies
-policy_parameters
-policy_outcomes
-economic_indicators
-social_indicators
-stakeholders
-evidence_documents
-claims
-agent_arguments
-simulations
-simulation_results
-consequences
-```
+### Live Web Search (Tavily API)
 
-Use:
-
-### pgvector
-
-for:
-
-- policy embeddings
-- document embeddings
-- historical precedent retrieval
+Rather than maintaining a static, manually-curated Vector Database of PDFs, the Evidence Verification and Red-Team Agents utilize dynamic live web search (e.g., Tavily API). 
+This allows the agents to query the internet in real-time to find current evidence, news reports, and government assessments of unintended consequences during the debate.
 
 ---
 

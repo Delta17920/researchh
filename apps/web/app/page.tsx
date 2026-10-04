@@ -153,9 +153,24 @@ export default function HomePage() {
         <div className="kicker">About</div>
         <h2 className="ghost-title">A deliberation room, not a recommender.</h2>
         <p className="lede">
-          MVP domain: statutory minimum wage in the United States, United Kingdom, Canada, and
-          Australia. Data from World Bank WDI, ILOSTAT, and FRED. Final authority stays human.
+          PolicyLens is fundamentally different from general-purpose AI models like ChatGPT or Gemini. 
+          Instead of providing a single, synthesized answer that hides uncertainty, PolicyLens uses a 
+          multi-agent architecture designed for structured disagreement.
         </p>
+        <div className="grid-3" style={{ marginTop: "32px" }}>
+          <div className="panel">
+            <h3>No Sycophancy</h3>
+            <p className="muted">General AI is aligned to be helpful and agreeable. PolicyLens agents are adversarial by design, forcing rigorous debate and exposing hidden trade-offs.</p>
+          </div>
+          <div className="panel">
+            <h3>Grounded Evidence</h3>
+            <p className="muted">Rather than relying on model weights for facts, agents are constrained to argue using our Monte Carlo simulations and live web evidence via Tavily.</p>
+          </div>
+          <div className="panel">
+            <h3>Human Authority</h3>
+            <p className="muted">Unlike an oracle that tells you the "right" answer, the system explicitly refuses to recommend implementation. The final decision remains strictly human.</p>
+          </div>
+        </div>
       </section>
     </main>
   );

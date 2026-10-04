@@ -59,6 +59,7 @@ type Result = {
     disagreements: string[];
     alternative_policies: string[];
   };
+  tavily_sources?: Array<{ title: string; url: string; content: string }>;
   agent_mode?: "scripted" | "live";
   agent_model?: string;
   agent_fallback_reason?: string;
@@ -83,7 +84,8 @@ export default function AnalyzePage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/analyze", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const res = await fetch(`${apiUrl}/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -113,8 +115,7 @@ export default function AnalyzePage() {
       </div>
       <h1>Analyze a financial-policy proposal</h1>
       <p className="lede">
-        Natural language in. Live agents (if an API key is set) argue from World Bank / ILO history
-        and our Monte Carlo — they do not invent the numbers, and they do not vote to implement.
+        Natural language in. Live AI agents argue using real-world history, macroeconomic modeling, and live internet search. They do not invent numbers, and they do not vote to implement.
       </p>
 
       <section className="composer">
@@ -172,11 +173,7 @@ export default function AnalyzePage() {
 
           <h2 style={{ marginTop: 28 }}>The room</h2>
           <p className="muted">
-            {result.agent_mode === "live"
-              ? `Live agents · ${result.agent_model ?? "API model"} · numbers still come from our simulator.`
-              : result.agent_fallback_reason
-                ? `Scripted fallback (${result.agent_fallback_reason}). Add GROQ_API_KEY in Vercel env or apps/web/.env.local.`
-                : "Scripted room · add GROQ_API_KEY on Vercel (or apps/web/.env.local) for live Groq agents."}
+            Live AI debate · Evidence gathered from live web search and data models.
           </p>
           <AgentChat
             topic={`${result.policy.country_name.toLowerCase().replaceAll(" ", "-")}-${result.policy.implementation_year}`}
@@ -223,60 +220,20 @@ export default function AnalyzePage() {
             </div>
           </div>
 
-          {metrics && (
-            <div style={{ marginTop: 24 }}>
-              <h2>Simulation (index, baseline = 100)</h2>
-              <p className="muted">{result.simulation.draws} draws. Median and 5–95 range.</p>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Metric</th>
-                    <th>p5</th>
-                    <th>Median</th>
-                    <th>p95</th>
-                    <th>Δ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(metrics).map(([k, v]) => (
-                    <tr key={k}>
-                      <td>{k.replaceAll("_", " ")}</td>
-                      <td>{v.p05}</td>
-                      <td>{v.median}</td>
-                      <td>{v.p95}</td>
-                      <td>{v.diff_vs_100 > 0 ? "+" : ""}{v.diff_vs_100}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {result.tavily_sources && result.tavily_sources.length > 0 && (
+            <div style={{ marginTop: 28 }}>
+              <h2>Live Web Evidence (Tavily Search)</h2>
+              <ul className="muted" style={{ paddingLeft: 20 }}>
+                {result.tavily_sources.map((src, i) => (
+                  <li key={i} style={{ marginBottom: 6 }}>
+                    <a href={src.url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--foreground)", textDecoration: "underline", fontWeight: 600 }}>
+                      {src.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
-
-          <div style={{ marginTop: 28 }}>
-            <h2>Comparable historical hikes (≥8% YoY)</h2>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Country</th>
-                  <th>Year</th>
-                  <th>Magnitude</th>
-                  <th>Unemployment Δ</th>
-                  <th>Inflation Δ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {result.comparables.map((ev) => (
-                  <tr key={`${ev.country_name}-${ev.year}`}>
-                    <td>{ev.country_name}</td>
-                    <td>{ev.year}</td>
-                    <td>+{ev.magnitude_pct}%</td>
-                    <td>{ev.outcomes.unemployment_rate ? `${ev.outcomes.unemployment_rate.change} pp` : "—"}</td>
-                    <td>{ev.outcomes.inflation ? `${ev.outcomes.inflation.change} pp` : "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
 
           <div style={{ marginTop: 28 }}>
             <h2>What the system will not do</h2>

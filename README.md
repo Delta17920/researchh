@@ -1,55 +1,58 @@
 # PolicyLens AI
 
-Human AI policy deliberation prototype. **It does not recommend implementing a policy.**
+PolicyLens is a Human-AI policy deliberation prototype designed for structured, adversarial analysis of policy proposals. **It does not recommend implementing a policy. It forces disagreement.**
 
-First slice: minimum wage · United States, United Kingdom(Great Britain), Canada, Australia.
+Unlike general-purpose AI models that summarize or act agreeable, PolicyLens uses specialized agents (Economic, Social, Red Team) to critique policies using **live web research (Tavily)** and **Monte Carlo macroeconomic simulations**.
 
-The demo app is a **single Next.js project** in `apps/web`. Analysis, chat debate, and Monte Carlo all run as Next.js API routes. No Python server is required to host or demo.
+## Tech Stack
+- **Frontend**: Next.js (React) located in `apps/web`
+- **Backend**: FastAPI (Python) located in `apps/api`
+- **Intelligence**: Groq / Llama 3 (for structured extraction and adversarial debate)
+- **Search**: Tavily (for live web evidence gathering)
 
-## Deploy on Vercel (for the demo)
+## Running Locally
 
-1. Push this repo to GitHub (already: `https://github.com/Delta17920/researchh`).
-2. Go to [vercel.com/new](https://vercel.com/new) and sign in with GitHub.
-3. **Import** `Delta17920/researchh`.
-4. Set **Root Directory** to `apps/web` (click *Edit* next to Root Directory).  
-   Framework should show **Next.js**. Leave build as default (`npm run build`).
-5. Click **Deploy**. Wait ~1–2 minutes.
-6. Open the `*.vercel.app` URL. Use **Analyze → Run analysis**.
+To run the full stack locally, you need two terminals.
 
-No environment variables are needed for the **scripted** demo.
+### 1. Start the Python Backend (`apps/api`)
+```powershell
+cd apps/api
+# Create a virtual environment and install requirements
+python -m venv venv
+.\venv\Scripts\activate
+pip install -r requirements.txt
 
-For **live agents** on Vercel: Project Settings → Environment Variables → add:
+# Start the FastAPI server
+uvicorn app.main:app --reload --port 8000
+```
 
-- `GROQ_API_KEY` (from [console.groq.com/keys](https://console.groq.com/keys))
-- optional `GROQ_MODEL` (default `openai/gpt-oss-20b`; Llama 3.3 70B is not on most Groq free keys)
-
-Apply to Production, then Redeploy. Without the key, Analyze still uses the scripted room.
-
-## Live agents (local)
-
-Copy `apps/web/.env.example` to `apps/web/.env.local` and set `GROQ_API_KEY`.
-
-Then `npm run dev`. Analyze will say **Live agents** under The room. Numbers still come from our Monte Carlo; Groq only writes the debate. If Groq fails, it falls back to the scripted room.
-
-If Root Directory is left as `.` the build will fail, because Next.js lives in `apps/web`.
-
-## Run locally (one terminal)
-
+### 2. Start the Next.js Frontend (`apps/web`)
 ```powershell
 cd apps/web
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Optional Python API (`apps/api`) still exists for research work. The Vercel demo does not use it.
+## Environment Variables
+
+For the system to work optimally (live agents and live web search), you need to provide API keys to the Python backend. Create an `.env` file in `apps/api` (or set them in your terminal):
+
+- `GROQ_API_KEY`: Required for the LLM agents to dynamically debate and extract domains. (Get from [console.groq.com](https://console.groq.com/keys))
+- `TAVILY_API_KEY`: Required for the Red Team agent to pull live internet search evidence. (Get from [tavily.com](https://tavily.com))
+
+If keys are missing, the backend will gracefully fall back to scripted/cached responses where possible.
+
+## Deployment
+
+Because this is a split-stack architecture, you must deploy the frontend and backend separately:
+1. **Backend (FastAPI)**: Deploy `apps/api` to a service like Render, Heroku, or Railway. Add your `GROQ_API_KEY` and `TAVILY_API_KEY` to the environment variables.
+2. **Frontend (Next.js)**: Deploy `apps/web` to Vercel. Set the environment variable `NEXT_PUBLIC_API_URL` to point to your deployed Python backend URL (e.g., `https://my-policylens-api.onrender.com`).
 
 ## Data
-
-Public datasets are bundled in `apps/web/data/catalog.json` (World Bank, ILOSTAT, FRED). Refresh from scratch with:
-
+Public datasets are bundled in `apps/api/data/catalog.json` (World Bank, ILOSTAT, FRED). To refresh from scratch:
 ```powershell
 python scripts/fetch_data.py
-copy data\processed\catalog.json apps\web\data\catalog.json
+copy data\processed\catalog.json apps\api\app\catalog.json
 ```
